@@ -359,7 +359,7 @@ std::vector<std::vector<cv::Rect>> Segmentation::DrawBorders(cv::Mat &srcImage, 
     });
 
     // Sort bound rects from top-left to bottom-right
-    SortCells(boundRectArray, 1);
+    SortCells(boundRectArray, 0);
 
     // Erase biggest external rectangle
     boundRectArray.erase(boundRectArray.begin());
@@ -374,7 +374,7 @@ std::vector<std::vector<cv::Rect>> Segmentation::DrawBorders(cv::Mat &srcImage, 
     }
 
     // Clustering rectangles based on 'Y' position
-    groupedRect = GroupCells(boundRectArray, 1);
+    groupedRect = GroupCells(boundRectArray, 0);
 
     if(showStep)
     {
