@@ -31,7 +31,6 @@ void Segmentation::AdaptiveThreshold(cv::Mat &inputImage, bool showStep)
   if(showStep)
   {
     cv::imshow("Thresholded image", inputImage); cv::waitKey(0);
-    //cv::imwrite(std::string("/Users/V3r0n/Documents/test/ROIs/thresholdedImage.png"), inputImage );
   }
 }
 
@@ -233,7 +232,6 @@ void Segmentation::WriteResult(cv::Mat &srcImage, cv::Mat &inputImage, const std
     OCR * ocrInit = new OCR();
 
     const std::string imageName = Converter::GetFilename(inPath);
-    std::cout<<imageName<<std::endl;
 
     // Index of page
     static int pageNum = 0;
@@ -254,20 +252,11 @@ void Segmentation::WriteResult(cv::Mat &srcImage, cv::Mat &inputImage, const std
     std::locale wcoutLoc{std::wcout.getloc(), new std::codecvt_utf8<wchar_t>{}};
     std::wcout.imbue(wcoutLoc);
 
-    std::cout<<"SAVE: "<< outPath<<std::endl;
-
     for(auto i = groupedRect.begin(); i != groupedRect.end(); i++)
     {
       int raw = i - groupedRect.begin(); // Iterator to index
       for(auto j = i->begin(); j != i->end(); j++, cellIdx++)
       {
-
-        // Write detected cells as separated png files
-        /*cv::imwrite(std::string("/Users/V3r0n/Documents/test/ROIs/") + std::string("ROI_") + std::to_string(cellIdx) + ".png", srcImage(*j), compressParams);*/
-
-        /*std::cout<<j->width<<' ';
-        std::cout<<"Count of white pixels = "<<CountWhite(inputImage(*j))<<" "<<cellIdx<<std::endl;*/
-
         int col = j - i->begin(); // convert iterator to index
 
         if(CountWhite(inputImage(*j)) == 0) // skip full white cells
@@ -300,7 +289,6 @@ void Segmentation::WriteResult(cv::Mat &srcImage, cv::Mat &inputImage, const std
           }(textCell);
 
           csvWriter.setCell(col, raw, UTF8_UTF_16_CONVERTER.to_bytes(textCell));
-
           /*std::wcout << textCell<< std::endl;*/
         }
       }
@@ -355,11 +343,8 @@ std::vector<std::vector<cv::Rect>> Segmentation::DrawBorders(cv::Mat &srcImage, 
           cv::line(patternImage(RectROI), cv::Point(*xIt, 0), cv::Point(*xIt, mask(RectROI).rows), WHITE_CV, sizeVer);
           cv::line(srcImage(RectROI), cv::Point(*xIt, 0), cv::Point(*xIt, mask(RectROI).rows), WHITE_CV, sizeVer);
         }
-
-        /*
-        cv::imshow("ROI: " + std::to_string(it - yCoords.begin()), inputImage(RectROI));
-        cv::imwrite(std::string("/Users/V3r0n/Documents/test/ROIs/") + std::string("ROI_") + std::to_string(yIt - yCoords.begin()) + ".png", inputImage(RectROI));
-        */
+        
+        /* cv::imshow("ROI: " + std::to_string(it - yCoords.begin()), inputImage(RectROI)) */
 
       }
     }
@@ -385,7 +370,6 @@ std::vector<std::vector<cv::Rect>> Segmentation::DrawBorders(cv::Mat &srcImage, 
       if(rect->width <= 6 || rect->height <= 3)
       {
         boundRectArray.erase(--rect);
-        std::cout<<"ERASED"<<std::endl;
       }
     }
 
@@ -395,10 +379,7 @@ std::vector<std::vector<cv::Rect>> Segmentation::DrawBorders(cv::Mat &srcImage, 
     if(showStep)
     {
       cv::imshow("Pattern", patternImage); cv::waitKey(0);
-      //cv::imwrite("/Users/V3r0n/Documents/test/ROIs/Pattern.png", patternImage); cv::waitKey(0);
-      //cv::imwrite("/Users/V3r0n/Documents/test/ROIs/im.png", inputImage); cv::waitKey(0);
     }
-
   }
 
   catch (cv::Exception& ex)
@@ -496,8 +477,6 @@ void Segmentation::CleanStamp(cv::Mat &inputImage, bool showStep)
 
   else
     return;
-
-  /*std::cout<<"Area = "<<cv::countNonZero(biggestBlob)<<std::endl;*/
 
   if(cv::countNonZero(biggestBlob) > minStampArea)
   {
